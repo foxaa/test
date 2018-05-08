@@ -16,10 +16,10 @@ namespace Project.App
             string operation = String.Empty;
 
             bool isDisplay = false;
+            Help();
             do
             {
                 isDisplay = false;
-                Help();
                 Console.Write("Insert command:");
                 operation = Console.ReadLine();
                 validation.CheckCommand(operation);
