@@ -10,8 +10,8 @@ namespace Project.Code.Models
     {
         public int CeoYears { get; set; }
 
-        public CEO(string name, string lastName, int age,int years)
-            :base(name,lastName,age)
+        public CEO(int id,string name, string lastName, int age,int years)
+            :base(id,name,lastName,age)
         {
             this.CeoYears = years;
         }

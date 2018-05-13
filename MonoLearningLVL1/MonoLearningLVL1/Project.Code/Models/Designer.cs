@@ -10,8 +10,8 @@ namespace Project.Code.Models
     {
         public string Project { get; set; }
         public bool CanDraw { get; set; }
-        public Designer(string name, string lastName, int age, string project, bool canDraw)
-            : base(name, lastName, age)
+        public Designer(int id,string name, string lastName, int age, string project, bool canDraw)
+            : base(id,name, lastName, age)
         {
             this.Project = project;
             this.CanDraw = canDraw;

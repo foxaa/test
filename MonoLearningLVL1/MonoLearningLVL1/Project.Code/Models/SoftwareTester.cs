@@ -10,8 +10,8 @@ namespace Project.Code.Models
     {
         public string Project { get; set; }
         public bool UsesAutomatedTests { get; set; }
-        public SoftwareTester(string name, string lastName, int age, string project, bool usesAutomatedTests)
-            : base(name, lastName, age)
+        public SoftwareTester(int id,string name, string lastName, int age, string project, bool usesAutomatedTests)
+            : base(id,name, lastName, age)
         {
             this.Project = project;
             this.UsesAutomatedTests = usesAutomatedTests;

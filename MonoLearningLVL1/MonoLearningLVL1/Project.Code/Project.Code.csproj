@@ -43,6 +43,7 @@
     <Compile Include="Const\Commands.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Services\BaseCRUD.cs" />
+    <Compile Include="Services\CeoService.cs" />
     <Compile Include="Services\EmployeeContainer.cs" />
     <Compile Include="Models\CEO.cs" />
     <Compile Include="Models\Designer.cs" />
@@ -51,6 +52,8 @@
     <Compile Include="Models\SoftwareTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Const\Roles.cs" />
+    <Compile Include="Services\EmployeeIdGeneratorService.cs" />
+    <Compile Include="Services\FactoryService.cs" />
     <Compile Include="Services\Validation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

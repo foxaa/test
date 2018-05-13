@@ -1,5 +1,6 @@
 ﻿using Project.Code;
 using Project.Code.Models;
+using Project.Code.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,18 +43,18 @@ namespace Project.App
             List<Employee> employees = employeeContainer.GetEmployees();
             Validation validation = new Validation();
 
-            string lastName = String.Empty;
+            string id = String.Empty;
 
             do
             {
-                Console.Write("Enter last name of employee you want to delete:");
-                lastName = Console.ReadLine();
-                validation.CheckInput(lastName);
+                Console.Write("Enter id of employee you want to delete:");
+                id = Console.ReadLine();
+                validation.CheckIntegerInput(id);
             } while (!validation.inputIsValid);
-
+            Int32.TryParse(id, out int intId);
             for (int i = employees.Count-1; i >=0; i--)
             {
-                if (employees[i].LastName == lastName)
+                if (employees[i].Id == intId)
                 {
                     employeeContainer.DeleteEmployee(employees[i]);
                     Console.WriteLine("Employee deleted");
@@ -70,7 +71,7 @@ namespace Project.App
             {
                 foreach (ProjectManager p in employees.OfType<ProjectManager>())
                 {
-                    Console.WriteLine(p.FirstName + "," + p.LastName + "," + p.Age + ","
+                    Console.WriteLine(p.Id + ":" + p.FirstName + "," + p.LastName + "," + p.Age + ","
                         + p.Project);
                 }
             }
@@ -78,7 +79,7 @@ namespace Project.App
             {
                 foreach (Developer d in employees.OfType<Developer>())
                 {
-                    Console.WriteLine(d.FirstName + "," + d.LastName + "," + d.Age + ","
+                    Console.WriteLine(d.Id + ":" + d.FirstName + "," + d.LastName + "," + d.Age + ","
                         + d.Project + "," + d.IsStudent);
                 }
             }
@@ -86,7 +87,7 @@ namespace Project.App
             {
                 foreach (SoftwareTester s in employees.OfType<SoftwareTester>())
                 {
-                    Console.WriteLine(s.FirstName + "," + s.LastName + "," + s.Age + ","
+                    Console.WriteLine(s.Id + ":" + s.FirstName + "," + s.LastName + "," + s.Age + ","
                         + s.Project + "," + s.UsesAutomatedTests);
                 }
             }
@@ -94,7 +95,7 @@ namespace Project.App
             {
                 foreach (Designer d in employees.OfType<Designer>())
                 {
-                    Console.WriteLine(d.FirstName + "," + d.LastName + "," + d.Age + ","
+                    Console.WriteLine(d.Id + ":" + d.FirstName + "," + d.LastName + "," + d.Age + ","
                         + d.Project + "," + d.CanDraw);
                 }
             }
@@ -102,7 +103,7 @@ namespace Project.App
             {
                 foreach (CEO c in employees.OfType<CEO>())
                 {
-                    Console.WriteLine(c.FirstName + "," + c.LastName + "," + c.Age + ","
+                    Console.WriteLine(c.Id + ":" + c.FirstName + "," + c.LastName + "," + c.Age + ","
                         + c.CeoYears);
                 }
             }
@@ -117,19 +118,19 @@ namespace Project.App
             {
                 if (emp.GetType() == typeof(Developer))
                 {
-                    Console.WriteLine(Roles.Developer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.Developer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 }
                 else if (emp.GetType() == typeof(ProjectManager))
                 {
-                    Console.WriteLine(Roles.ProjectManager + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.ProjectManager + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 }
                 else if (emp.GetType() == typeof(SoftwareTester))
                 {
-                    Console.WriteLine(Roles.SoftwareTester + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.SoftwareTester + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 }
                 else if (emp.GetType() == typeof(Designer))
                 {
-                    Console.WriteLine(Roles.Designer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.Designer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 }
             }
         }
@@ -143,15 +144,15 @@ namespace Project.App
             foreach(Employee emp in employees)
             {
                 if(emp.GetType() == typeof(Developer))
-                    Console.WriteLine(Roles.Developer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.Developer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 else if(emp.GetType() == typeof(CEO))
-                    Console.WriteLine(Roles.CEO + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.CEO + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 else if(emp.GetType() == typeof(SoftwareTester))
-                    Console.WriteLine(Roles.SoftwareTester + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.SoftwareTester + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 else if (emp.GetType() == typeof(Designer))
-                    Console.WriteLine(Roles.Designer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.Designer + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
                 else if (emp.GetType() == typeof(ProjectManager))
-                    Console.WriteLine(Roles.ProjectManager + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
+                    Console.WriteLine(emp.Id + ":" + Roles.ProjectManager + "," + emp.FirstName + "," + emp.LastName + "," + emp.Age);
             }
         }
 
@@ -178,6 +179,7 @@ namespace Project.App
 
             EmployeeContainer container = EmployeeContainer.Inst;
             Validation validation = new Validation();
+            EmployeeIdGeneratorService IdGenerator = EmployeeIdGeneratorService.Inst;
 
             do
             {
@@ -213,7 +215,8 @@ namespace Project.App
                 } while (!validation.inputIsValid);
                 Int32.TryParse(age, out int ageInt);
                 Int32.TryParse(ceoYears, out int ceoYearsInt);
-                Employee employee = new CEO(name, lastName, ageInt,ceoYearsInt);
+                var id = IdGenerator.IncId();
+                Employee employee = new CEO(id,name, lastName, ageInt,ceoYearsInt);
                 container.AddCEO(employee);
             }
             else if (role == "PM")
@@ -225,7 +228,8 @@ namespace Project.App
                     validation.CheckInput(projectName);
                 } while (!validation.inputIsValid);
                 Int32.TryParse(age, out int ageInt);
-                Employee employee = new ProjectManager(name, lastName, ageInt, projectName);
+                var id = IdGenerator.IncId();
+                Employee employee = new ProjectManager(id,name, lastName, ageInt, projectName);
                 container.AddEmployee(employee);
             }
             else if (role == "DEV")
@@ -244,7 +248,8 @@ namespace Project.App
                 }
                 while (!validation.inputIsValid);
                 Int32.TryParse(age, out int ageInt);
-                Employee employee = new Developer(name, lastName, ageInt, projectName, boolValue);
+                var id = IdGenerator.IncId();
+                Employee employee = new Developer(id,name, lastName, ageInt, projectName, boolValue);
                 container.AddEmployee(employee);
             }
             else if(role=="DSNR")
@@ -263,7 +268,8 @@ namespace Project.App
                 }
                 while (!validation.inputIsValid);
                 Int32.TryParse(age, out int ageInt);
-                Employee employee = new Designer(name, lastName, ageInt, projectName, boolValue);
+                var id = IdGenerator.IncId();
+                Employee employee = new Designer(id,name, lastName, ageInt, projectName, boolValue);
                 container.AddEmployee(employee);
             }
             else if (role == "ST")
@@ -282,7 +288,8 @@ namespace Project.App
                 }
                 while (!validation.inputIsValid);
                 Int32.TryParse(age, out int ageInt);
-                Employee employee = new SoftwareTester(name, lastName, ageInt, projectName, boolValue);
+                var id = IdGenerator.IncId();
+                Employee employee = new SoftwareTester(id,name, lastName, ageInt, projectName, boolValue);
                 container.AddEmployee(employee);
             }
         }

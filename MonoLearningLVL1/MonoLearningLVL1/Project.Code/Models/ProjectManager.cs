@@ -9,8 +9,8 @@ namespace Project.Code.Models
     public class ProjectManager:Employee
     {
         public string Project { get; set; }
-        public ProjectManager(string name, string lastName, int age, string project)
-           : base(name, lastName, age)
+        public ProjectManager(int id,string name, string lastName, int age, string project)
+           : base(id,name, lastName, age)
         {
             this.Project = project;
         }
