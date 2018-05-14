@@ -16,5 +16,7 @@ namespace Project.Code.Models
             this.Project = project;
             this.CanDraw = canDraw;
         }
+
+        public Designer() { }
     }
 }

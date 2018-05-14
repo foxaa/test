@@ -14,5 +14,7 @@ namespace Project.Code.Models
         {
             this.Project = project;
         }
+
+        public ProjectManager() { }
     }
 }

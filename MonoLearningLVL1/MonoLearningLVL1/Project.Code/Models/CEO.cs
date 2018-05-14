@@ -15,5 +15,9 @@ namespace Project.Code.Models
         {
             this.CeoYears = years;
         }
+
+        public CEO()
+        {
+        }
     }
 }

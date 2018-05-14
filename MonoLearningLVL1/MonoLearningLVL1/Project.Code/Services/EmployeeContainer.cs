@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace Project.Code
 {
-    public sealed class EmployeeContainer:BaseCRUD
+    public class EmployeeContainer
     {
         private static EmployeeContainer instance;
-        private EmployeeContainer() { }
+        private List<Employee> EmployeeList =new List<Employee>();
+
+        private EmployeeContainer()
+        {
+        }
 
         public static EmployeeContainer Inst
         {
@@ -25,24 +29,24 @@ namespace Project.Code
             }
         }
 
-        public new void AddEmployee(Employee employee)
+        public void AddEmployee(Employee employee)
         {
-            base.AddEmployee(employee);
+            EmployeeList.Add(employee);
         }
 
-        public new void DeleteEmployee(Employee employee)
+        public void DeleteEmployee(Employee employee)
         {
-            base.DeleteEmployee(employee);
+            EmployeeList.Remove(employee);
         }
 
-        public new void AddCEO(Employee employee)
+        public void AddCEO(Employee employee)
         {
-            base.AddCEO(employee);
+            EmployeeList.Add(employee);
         }
 
-        public new List<Employee> GetEmployees()
+        public List<Employee> GetEmployees()
         {
-            return base.GetEmployees();
+            return EmployeeList.ToList();
         }
     }
 }

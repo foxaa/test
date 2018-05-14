@@ -8,35 +8,27 @@ namespace Project.Code.Services
 {
     public abstract class BaseCRUD
     {
+        private static bool ceoExists = false;
+        private readonly EmployeeContainer storage;
 
-        private bool ceoExists = false;
-        List<Employee> Employees = new List<Employee>();
+        protected BaseCRUD()
+        {
+            storage = EmployeeContainer.Inst;
+        }
 
         protected void AddEmployee(Employee employee)
         {
-            Employees.Add(employee);
+            storage.AddEmployee(employee);
         }
 
         protected List<Employee> GetEmployees()
         {
-            return Employees;
+            return storage.GetEmployees();
         }
 
         protected void DeleteEmployee(Employee employee)
         {
-            Employees.Remove(employee);
+            storage.DeleteEmployee(employee);
         }
-
-        protected void AddCEO(Employee employee)
-        {
-            if (!ceoExists)
-            {
-                Employees.Add(employee);
-                ceoExists = true;
-            }
-            else
-                Console.WriteLine("There can only be one CEO");
-        }
-
     }
 }

@@ -64,49 +64,8 @@ namespace Project.App
 
         public static void RoleList(string operation)
         {
-            EmployeeContainer employeeContainer = EmployeeContainer.Inst;
-            List<Employee> employees = employeeContainer.GetEmployees();
-
-            if (operation.Equals("PMLIST",StringComparison.CurrentCultureIgnoreCase))
-            {
-                foreach (ProjectManager p in employees.OfType<ProjectManager>())
-                {
-                    Console.WriteLine(p.Id + ":" + p.FirstName + "," + p.LastName + "," + p.Age + ","
-                        + p.Project);
-                }
-            }
-            else if (operation.Equals("DEVLIST", StringComparison.CurrentCultureIgnoreCase))
-            {
-                foreach (Developer d in employees.OfType<Developer>())
-                {
-                    Console.WriteLine(d.Id + ":" + d.FirstName + "," + d.LastName + "," + d.Age + ","
-                        + d.Project + "," + d.IsStudent);
-                }
-            }
-            else if (operation.Equals("STLIST", StringComparison.CurrentCultureIgnoreCase))
-            {
-                foreach (SoftwareTester s in employees.OfType<SoftwareTester>())
-                {
-                    Console.WriteLine(s.Id + ":" + s.FirstName + "," + s.LastName + "," + s.Age + ","
-                        + s.Project + "," + s.UsesAutomatedTests);
-                }
-            }
-            else if (operation.Equals("DSNRLIST", StringComparison.CurrentCultureIgnoreCase))
-            {
-                foreach (Designer d in employees.OfType<Designer>())
-                {
-                    Console.WriteLine(d.Id + ":" + d.FirstName + "," + d.LastName + "," + d.Age + ","
-                        + d.Project + "," + d.CanDraw);
-                }
-            }
-            else if (operation.Equals("CEOLIST", StringComparison.CurrentCultureIgnoreCase))
-            {
-                foreach (CEO c in employees.OfType<CEO>())
-                {
-                    Console.WriteLine(c.Id + ":" + c.FirstName + "," + c.LastName + "," + c.Age + ","
-                        + c.CeoYears);
-                }
-            }
+            FactoryService factoryService = new FactoryService();
+            factoryService.GetRoleList(operation);
         }
 
         public static void List()
@@ -171,15 +130,8 @@ namespace Project.App
             string age = String.Empty;
             string role = String.Empty;
 
-            string ceoYears = String.Empty;
-            string projectName = String.Empty;
-            string checkBool = String.Empty;
-
-            bool boolValue = false;
-
-            EmployeeContainer container = EmployeeContainer.Inst;
             Validation validation = new Validation();
-            EmployeeIdGeneratorService IdGenerator = EmployeeIdGeneratorService.Inst;
+            FactoryService factoryService = new FactoryService();
 
             do
             {
@@ -205,92 +157,51 @@ namespace Project.App
                 age = Console.ReadLine();
                 validation.CheckIntegerInput(age);
             } while (!validation.inputIsValid);
-            if (role == "CEO")
+            var serv = factoryService.GetServiceForAdd(role);
+            if(serv.GetType() == typeof(CeoService))
             {
-                do
-                {
-                    Console.Write("Enter years of being CEO:");
-                    ceoYears = Console.ReadLine();
-                    validation.CheckIntegerInput(ceoYears);
-                } while (!validation.inputIsValid);
-                Int32.TryParse(age, out int ageInt);
-                Int32.TryParse(ceoYears, out int ceoYearsInt);
-                var id = IdGenerator.IncId();
-                Employee employee = new CEO(id,name, lastName, ageInt,ceoYearsInt);
-                container.AddCEO(employee);
+                var service = (CeoService)serv;
+                Employee employee = new CEO();
+                employee.FirstName = name;
+                employee.LastName = lastName;
+                employee.Age = Int32.Parse(age);
+                service.AddEmployee(employee);
             }
-            else if (role == "PM")
+            else if(serv.GetType() == typeof(DeveloperService))
             {
-                do
-                {
-                    Console.Write("Enter project name:");
-                    projectName = Console.ReadLine();
-                    validation.CheckInput(projectName);
-                } while (!validation.inputIsValid);
-                Int32.TryParse(age, out int ageInt);
-                var id = IdGenerator.IncId();
-                Employee employee = new ProjectManager(id,name, lastName, ageInt, projectName);
-                container.AddEmployee(employee);
+                var service = (DeveloperService)serv;
+                Employee employee = new Developer();
+                employee.FirstName = name;
+                employee.LastName = lastName;
+                employee.Age = Int32.Parse(age);
+                service.AddEmployee(employee);
             }
-            else if (role == "DEV")
+            else if (serv.GetType() == typeof(DesignerService))
             {
-                do
-                {
-                    Console.Write("Enter project name:");
-                    projectName = Console.ReadLine();
-                    validation.CheckInput(projectName);
-                } while (!validation.inputIsValid);
-                do
-                {
-                    Console.Write("Is developer a student?");
-                    checkBool = Console.ReadLine();
-                    boolValue = validation.CheckBoolInput(checkBool);
-                }
-                while (!validation.inputIsValid);
-                Int32.TryParse(age, out int ageInt);
-                var id = IdGenerator.IncId();
-                Employee employee = new Developer(id,name, lastName, ageInt, projectName, boolValue);
-                container.AddEmployee(employee);
+                var service = (DesignerService)serv;
+                Employee employee = new Designer();
+                employee.FirstName = name;
+                employee.LastName = lastName;
+                employee.Age = Int32.Parse(age);
+                service.AddEmployee(employee);
             }
-            else if(role=="DSNR")
+            else if (serv.GetType() == typeof(ProjectManagerService))
             {
-                do
-                {
-                    Console.Write("Enter project name:");
-                    projectName = Console.ReadLine();
-                    validation.CheckInput(projectName);
-                } while (!validation.inputIsValid);
-                do
-                {
-                    Console.Write("Can the designer draw?");
-                    checkBool = Console.ReadLine();
-                    boolValue = validation.CheckBoolInput(checkBool);
-                }
-                while (!validation.inputIsValid);
-                Int32.TryParse(age, out int ageInt);
-                var id = IdGenerator.IncId();
-                Employee employee = new Designer(id,name, lastName, ageInt, projectName, boolValue);
-                container.AddEmployee(employee);
+                var service = (ProjectManagerService)serv;
+                Employee employee = new ProjectManager();
+                employee.FirstName = name;
+                employee.LastName = lastName;
+                employee.Age = Int32.Parse(age);
+                service.AddEmployee(employee);
             }
-            else if (role == "ST")
+            else if (serv.GetType() == typeof(SoftwareTesterService))
             {
-                do
-                {
-                    Console.Write("Enter project name:");
-                    projectName = Console.ReadLine();
-                    validation.CheckInput(projectName);
-                } while (!validation.inputIsValid);
-                do
-                {
-                    Console.Write("Is tester using automated tests?");
-                    checkBool = Console.ReadLine();
-                    boolValue = validation.CheckBoolInput(checkBool);
-                }
-                while (!validation.inputIsValid);
-                Int32.TryParse(age, out int ageInt);
-                var id = IdGenerator.IncId();
-                Employee employee = new SoftwareTester(id,name, lastName, ageInt, projectName, boolValue);
-                container.AddEmployee(employee);
+                var service = (SoftwareTesterService)serv;
+                Employee employee = new SoftwareTester();
+                employee.FirstName = name;
+                employee.LastName = lastName;
+                employee.Age = Int32.Parse(age);
+                service.AddEmployee(employee);
             }
         }
     }

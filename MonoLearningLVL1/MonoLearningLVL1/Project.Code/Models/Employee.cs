@@ -15,10 +15,12 @@ namespace Project.Code
 
         protected Employee(int id,string name, string lastName, int age)
         {
-            Id = id;
-            FirstName = name;
-            LastName = lastName;
-            Age = age;       
+            this.Id = id;
+            this.FirstName = name;
+            this.LastName = lastName;
+            this.Age = age;
         }
+
+        public Employee() { }
     }
 }
